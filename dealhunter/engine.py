@@ -11,7 +11,7 @@ import re
 import threading
 import time
 
-from . import __version__, alerts, api, db, giveaways, steam, steamstore, storage
+from . import __version__, alerts, api, db, giveaways, specs, steam, steamstore, storage
 from .logs import log
 
 MODES = {"eco": ("توفير", 2.0), "normal": ("متوازن", 1.0), "fast": ("سريع", 0.5)}
@@ -65,6 +65,7 @@ class Engine:
         self.data = empty_data()
         self.src = {n: {"next": 0.0, "fails": 0, "ok": None, "last": 0.0, "err": ""} for n in ORDER}
         self.syncing = False
+        self.scan = {"running": False, "done": 0, "total": 0, "error": ""}
         self._load_snapshot()
 
     # ---------------- حالة + كاش ----------------
@@ -104,6 +105,8 @@ class Engine:
         return name == "wishlist" or bool(storage.get("sources").get(name, True))
 
     def loop(self):
+        if not storage.get("pc_detected"):
+            threading.Thread(target=self.detect_specs, daemon=True).start()
         while not self.stop.is_set():
             try:
                 self.run_due()
@@ -392,6 +395,68 @@ class Engine:
         st = storage.get("steam")
         return bool(st["id"]) and time.time() - st.get("last_sync", 0) > 86400
 
+    # ---------------- جهازي: هل اللعبة هتشتغل؟ ----------------
+    def detect_specs(self):
+        try:
+            d = specs.detect()
+        except Exception:  # noqa
+            log.exception("detect specs")
+            d = {}
+        storage.put("pc_detected", d)
+        self.touch()
+        return d
+
+    def pc_spec(self):
+        return specs.effective(storage.get("pc_detected"), storage.get("pc_override"))
+
+    def save_override(self, ov):
+        storage.put("pc_override", ov)
+        self.touch()
+
+    def scan_requirements(self, apps):
+        """بيجيب متطلبات الألعاب اللي لسه مش في الكاش (بالتدريج وفي الخلفية). بيرجع False لو فيه فحص شغال."""
+        apps = [int(a) for a in dict.fromkeys(apps)][:80]
+        todo = [a for a in apps if not specs.cache.fresh(a)]
+        with self.lock:
+            if self.scan["running"]:
+                return False
+            self.scan = {"running": bool(todo), "done": 0, "total": len(todo), "error": ""}
+        if not todo:
+            self.touch()
+            return True
+
+        def run():
+            errors = 0
+            for i, app in enumerate(todo, 1):
+                if self.stop.is_set():
+                    break
+                try:
+                    specs.cache.put(app, specs.fetch_requirements(app))
+                    errors = 0
+                except api.ApiError as e:
+                    errors += 1
+                    self.scan["error"] = str(e)[:100]
+                    if errors >= 3:  # غالباً Steam عملت rate-limit: نقف ونكمّل بعدين
+                        break
+                self.scan["done"] = i
+                if i % 4 == 0:
+                    self.touch()
+                if self.stop.wait(0.4):
+                    break
+            specs.cache.save()
+            with self.lock:
+                self.scan["running"] = False
+            self.touch()
+
+        threading.Thread(target=run, daemon=True).start()
+        return True
+
+    def canrun(self):
+        spec = self.pc_spec()
+        with specs.cache.lock:
+            data = dict(specs.cache._load())
+        return {a: specs.evaluate(spec, e) for a, e in data.items()}
+
     # ---------------- لقطة للواجهة ----------------
     def state(self):
         owned = set(storage.get("owned"))
@@ -423,4 +488,7 @@ class Engine:
                          "has_telegram": bool(tg.get("token")), "telegram_chat": tg.get("chat", "")},
             "channels": self.notifier.channels(), "quiet_now": in_quiet(), "held": len(self.held),
             "stores": sorted(set(d["store"] for d in deals)),
+            "pc": {"spec": self.pc_spec(), "detected": bool(storage.get("pc_detected")), "override": storage.get("pc_override"),
+                   "scan": dict(self.scan)},
+            "canrun": self.canrun(),
         }

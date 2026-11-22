@@ -15,6 +15,7 @@ DEFAULTS = {
     "mode": "normal", "quiet": {"on": False, "from": "00:00", "to": "08:00"},
     "sources": {"epic": True, "giveaways": True, "steam_free": True, "deals": True, "steam_specials": True},
     "discord": "", "telegram": {"token": "", "chat": ""}, "gid_map": {}, "seen_free3": None,
+    "pc_detected": {}, "pc_override": {},
 }
 
 

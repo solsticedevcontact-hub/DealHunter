@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qsl, unquote, urlparse
 
-from . import alerts, api, autostart, db, notify, share, steam, storage
+from . import alerts, api, autostart, db, notify, share, specs, steam, storage
 from .engine import MODES, in_quiet
 from .logs import log, path as log_path
 
@@ -247,6 +247,28 @@ class Server:
     def post_steam_unlink(self, q, b):
         self.engine.unlink_account()
         return {"ok": True}
+
+    def post_pc_detect(self, q, b):
+        d = self.engine.detect_specs()
+        return {"ok": bool(d), "spec": self.engine.pc_spec()}
+
+    def post_pc_save(self, q, b):
+        ov = {}
+        for k in ("cpu", "gpu"):
+            if str(b.get(k) or "").strip():
+                ov[k] = str(b[k]).strip()[:120]
+        for k, hi in (("ram_gb", 2048), ("vram_gb", 256), ("disk_gb", 100000)):
+            v = _num(b.get(k), 0, hi)
+            if str(b.get(k) or "").strip() and v is not None:
+                ov[k] = v
+        self.engine.save_override(ov)
+        return {"ok": True, "spec": self.engine.pc_spec()}
+
+    def post_pc_scan(self, q, b):
+        apps = [int(a) for a in (b.get("apps") or []) if str(a).isdigit()]
+        if not apps:
+            raise ApiFail("مفيش ألعاب تتفحص")
+        return {"ok": self.engine.scan_requirements(apps)}
 
     def post_history_clear(self, q, b):
         db.clear()

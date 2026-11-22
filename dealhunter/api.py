@@ -197,13 +197,21 @@ def remaining_text(end, now=None):
 
 
 # ---------------- CheapShark ----------------
+def deal_url(deal_id, store, app):
+    """رابط العرض. Steam ← صفحة اللعبة مباشرة. غيره ← redirect بتاع CheapShark.
+    الـ dealID بييجي من CheapShark متشفّر أصلاً (%2B…) فلازم safe="%" وإلا يتشفّر مرتين والرابط يفتح الصفحة الرئيسية بس."""
+    if store == "Steam" and app and str(app) != "0":
+        return f"https://store.steampowered.com/app/{int(app)}"
+    return "https://www.cheapshark.com/redirect?dealID=" + urllib.parse.quote(deal_id, safe="%")
+
+
 def parse_deal(d):
     app = d.get("steamAppID")
     image = f"https://cdn.cloudflare.steamstatic.com/steam/apps/{app}/header.jpg" if app and app != "0" else d.get("thumb")
     return {"id": d["dealID"], "game_id": d.get("gameID"), "title": d.get("title", "؟"),
             "sale": float(d["salePrice"]), "normal": float(d["normalPrice"]), "savings": float(d["savings"]),
             "store": STORES.get(str(d.get("storeID")), "متجر"), "image": image,
-            "url": "https://www.cheapshark.com/redirect?dealID=" + urllib.parse.quote(d["dealID"]),
+            "url": deal_url(d["dealID"], STORES.get(str(d.get("storeID"))), app),
             "metacritic": int(d.get("metacriticScore") or 0),
             "app": int(app) if app and app != "0" else None}
 
@@ -368,7 +376,7 @@ def game_deal(gid, v, allowed=None):
             "normal": float(best["retailPrice"]), "savings": float(best["savings"]),
             "store": STORES.get(str(best["storeID"]), "متجر"),
             "image": f"https://cdn.cloudflare.steamstatic.com/steam/apps/{app}/header.jpg" if app and app != "0" else info.get("thumb"),
-            "url": "https://www.cheapshark.com/redirect?dealID=" + urllib.parse.quote(best["dealID"]),
+            "url": deal_url(best["dealID"], STORES.get(str(best["storeID"])), app),
             "metacritic": 0, "app": int(app) if app and app != "0" else None}
 
 

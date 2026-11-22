@@ -166,6 +166,15 @@ class TestSources(Base):
         self.assertEqual(out2["Cyberpunk 2077"]["sale"], 14.99)
 
 
+class TestDealUrl(unittest.TestCase):
+    def test_no_double_encoding_and_steam_direct(self):
+        enc = "AbC%2BdEf%2FgH%3D"      # dealID زي ما CheapShark بترجّعه (متشفّر أصلاً)
+        self.assertEqual(api.deal_url(enc, "GOG", None), "https://www.cheapshark.com/redirect?dealID=" + enc)
+        self.assertEqual(api.deal_url("raw+id=", "GOG", None), "https://www.cheapshark.com/redirect?dealID=raw%2Bid%3D")
+        self.assertEqual(api.deal_url(enc, "Steam", "1091500"), "https://store.steampowered.com/app/1091500")
+        self.assertTrue(api.deal_url(enc, "Steam", "0").startswith("https://www.cheapshark.com/redirect"))
+
+
 class TestSteamLogin(Base):
     def test_openid_verification(self):
         ret = "http://127.0.0.1:1/steam/callback?state=%s"

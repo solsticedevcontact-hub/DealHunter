@@ -104,6 +104,16 @@ class TestServer(unittest.TestCase):
         self.assertEqual(self.j("POST", "/api/open", {"url": "file:///etc/passwd"})[0], 400)
         self.assertEqual(self.j("POST", "/api/open", {"url": "javascript:alert(1)"})[0], 400)
 
+    def test_pc_endpoints(self):
+        self.assertEqual(self.j("POST", "/api/pc/scan", {"apps": []})[0], 400)
+        code, r = self.j("POST", "/api/pc/save", {"gpu": "RTX 3060", "ram_gb": "32", "cpu": "", "vram_gb": "abc"})
+        self.assertEqual(code, 200)
+        self.assertEqual(storage.get("pc_override"), {"gpu": "RTX 3060", "ram_gb": 32.0})   # القيم الغلط/الفاضية بتتتجاهل
+        self.assertEqual(r["spec"]["gpu"], "RTX 3060")
+        _, st = self.j("GET", "/api/state")
+        self.assertIn("canrun", st)
+        self.assertIn("spec", st["pc"])
+
     def test_unknown_and_bad_body(self):
         self.assertEqual(self.call("GET", "/api/nope")[0], 404)
         self.assertEqual(self.j("POST", "/api/settings", [1, 2])[0], 400)
