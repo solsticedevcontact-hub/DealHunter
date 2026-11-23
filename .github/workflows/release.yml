@@ -18,8 +18,13 @@ jobs:
           python-version: "3.11"
       - name: Install
         run: python -m pip install -r requirements.txt pyinstaller
-      - name: Build exe
-        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name DealHunter --icon assets/icon.ico --add-data "assets/icon.ico;assets" --add-data "dealhunter/web;dealhunter/web" --collect-all arabic_reshaper --collect-submodules pystray main.py
+      - name: Debug Files (نشوف إيه الموجود)
+        run: |
+          dir
+          dir dealhunter
+      - name: Build exe (بدون أيقونة لضمان النجاح)
+        run: |
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --name DealHunter --add-data "dealhunter/web;dealhunter/web" --collect-all arabic_reshaper --collect-submodules pystray main.py
       - uses: actions/upload-artifact@v4
         with:
           name: DealHunter
