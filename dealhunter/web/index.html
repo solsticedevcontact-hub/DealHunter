@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>صايد الفرصة 🎯</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎯%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#080a10;--bg2:#0d1017;--card:#121722;--card2:#181f2d;--line:#222b3d;--text:#e9edf6;--muted:#8a94ab;
+  --g:#22e678;--c:#35d0ff;--gold:#ffc83d;--red:#ff5c70;--vio:#8b7bff;--r:16px;
+  --grad:linear-gradient(135deg,#22e678,#35d0ff);
+  --shadow:0 10px 30px -12px rgba(0,0,0,.7);
+}
+@media (prefers-color-scheme: light){
+  :root.auto{--bg:#f2f5fa;--bg2:#e9eef6;--card:#fff;--card2:#f3f6fb;--line:#dbe2ee;--text:#121826;--muted:#5d6980;--shadow:0 10px 30px -14px rgba(20,30,60,.25)}
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:radial-gradient(1200px 600px at 85% -10%,rgba(53,208,255,.10),transparent 60%),radial-gradient(900px 500px at 10% 110%,rgba(34,230,120,.08),transparent 60%),var(--bg);
+  color:var(--text);font-family:"Segoe UI","Noto Sans Arabic",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.5;display:flex;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--c)}
+.num{direction:ltr;unicode-bidi:isolate;display:inline-block}
+:focus-visible{outline:2px solid var(--c);outline-offset:2px;border-radius:8px}
+
+/* ---------- sidebar ---------- */
+aside{width:236px;flex:none;background:linear-gradient(180deg,var(--bg2),rgba(13,16,23,.6));border-inline-start:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;gap:6px}
+.logo{display:flex;align-items:center;gap:10px;padding:4px 8px 16px}
+.logo svg{width:38px;height:38px;flex:none}
+.logo b{display:block;font-size:18px;letter-spacing:.2px}
+.logo small{color:var(--muted);font-size:12px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;color:var(--muted);text-align:start;transition:.15s;position:relative}
+nav button:hover{background:var(--card);color:var(--text)}
+nav button.on{background:var(--card2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+nav button.on::before{content:"";position:absolute;inset-inline-start:-14px;top:10px;bottom:10px;width:4px;border-radius:4px;background:var(--grad)}
+nav .ico{font-size:18px;width:24px;text-align:center}
+nav .cnt{margin-inline-start:auto;font-size:12px;background:var(--grad);color:#04140b;font-weight:700;border-radius:20px;padding:1px 8px}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.saved{background:linear-gradient(135deg,rgba(34,230,120,.14),rgba(53,208,255,.10));border:1px solid rgba(34,230,120,.25);border-radius:14px;padding:12px 14px}
+.saved small{color:var(--muted);display:block}
+.saved b{font-size:24px;color:var(--g)}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);padding:6px 10px;border-radius:20px;background:var(--card)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.ok{background:var(--g);box-shadow:0 0 8px var(--g)}.dot.bad{background:var(--red)}.dot.spin{background:var(--gold);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+
+/* ---------- main ---------- */
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+header h1{font-size:22px;white-space:nowrap}
+.search{flex:1;max-width:460px;margin-inline-start:auto;position:relative}
+.search input[type=text]{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 38px 9px 12px;outline:0}
+.search input[type=text]:focus{border-color:var(--c)}
+.search span{position:absolute;inset-inline-start:auto;right:12px;top:8px;opacity:.6}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);transition:.15s;white-space:nowrap;font-weight:600}
+.btn:hover{border-color:var(--c);transform:translateY(-1px)}
+.btn.pri{background:var(--grad);color:#04140b;border:0}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.sm{padding:6px 12px;font-size:13.5px;border-radius:10px}
+.btn.danger{color:var(--red)}
+.btn[disabled]{opacity:.5;pointer-events:none}
+#view{flex:1;overflow:auto;padding:24px 28px 60px;scroll-behavior:smooth}
+.sec{margin-bottom:34px}
+.sec>h2{font-size:18px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec>h2 small{color:var(--muted);font-weight:400;font-size:13px}
+.sec>h2 .more{margin-inline-start:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.chip{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:13.5px;transition:.15s}
+.chip:hover{color:var(--text)}.chip.on{background:var(--grad);color:#04140b;border-color:transparent;font-weight:700}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:18px}
+.toolbar label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px}
+select,input[type=text],input[type=number],input[type=password],input[type=time]{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:7px 10px;outline:0;color:var(--text)}
+select:focus,input:focus{border-color:var(--c)}
+input[type=checkbox]{accent-color:var(--g);width:17px;height:17px}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:transform .18s,border-color .18s;content-visibility:auto;contain-intrinsic-size:300px 300px}
+.card:hover{transform:translateY(-3px);border-color:#34415c}
+.card .img{position:relative;aspect-ratio:460/215;background:linear-gradient(135deg,#1b2336,#101521);display:grid;place-items:center;font-size:42px;color:#2c3853}
+.card .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{font-size:15.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.price{display:flex;align-items:baseline;gap:8px}
+.price b{font-size:22px}.price s{color:var(--muted);font-size:14px}
+.acts{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.acts .btn{flex:1;justify-content:center}
+.tag{position:absolute;top:10px;inset-inline-start:10px;display:flex;gap:6px;z-index:2}
+.tag2{position:absolute;bottom:8px;inset-inline-end:10px;z-index:2}
+.badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(8,10,16,.78);backdrop-filter:blur(6px);display:inline-flex;align-items:center;gap:6px}
+.badge .sd{width:8px;height:8px;border-radius:50%}
+.off{background:var(--red);color:#fff;font-size:15px;padding:4px 11px;direction:ltr;unicode-bidi:isolate}
+.free{background:var(--grad);color:#04140b}
+.low{background:linear-gradient(135deg,#ff9a3d,#ff4e50);color:#fff}
+.v-great{color:var(--g)}.v-ok{color:var(--gold)}.v-no{color:var(--red)}
+.bar0{height:8px;border-radius:8px;background:var(--card2);overflow:hidden}.bar0 i{display:block;height:100%;background:var(--grad);transition:width .3s}
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}.specs div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.specs small{color:var(--muted);display:block}.specs b{font-size:15px;word-break:break-word}
+.own{background:#27324a;color:var(--muted)}
+.done{opacity:.55}
+.cd{color:var(--gold);font-weight:600}
+
+/* ---------- hero ---------- */
+.hero{position:relative;border-radius:22px;overflow:hidden;min-height:300px;display:flex;align-items:flex-end;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:26px;background:#101521}
+.hero .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(1.1)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,10,16,.96) 8%,rgba(8,10,16,.35) 60%,rgba(8,10,16,.1))}
+.hero .in{position:relative;z-index:2;padding:26px 30px;display:flex;flex-direction:column;gap:12px;max-width:760px}
+.hero h2{font-size:34px;line-height:1.2}
+.hero .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.dots{position:absolute;z-index:3;top:16px;inset-inline-end:18px;display:flex;gap:6px}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}.dots i.on{background:var(--g);width:22px;border-radius:6px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.kpi small{color:var(--muted)}.kpi b{display:block;font-size:30px;margin-top:2px}
+.kpi.g b{color:var(--g)}.kpi.c b{color:var(--c)}.kpi.y b{color:var(--gold)}.kpi.v b{color:var(--vio)}
+
+/* ---------- lists / forms ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px}
+.panel h3{font-size:16.5px;margin-bottom:4px}.panel p.sub{color:var(--muted);font-size:13.5px;margin-bottom:14px}
+.row2{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.field{display:flex;flex-direction:column;gap:4px}.field small{color:var(--muted);font-size:12.5px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.sw:last-child{border:0}
+.tog{position:relative;width:44px;height:25px;flex:none}
+.tog input{position:absolute;opacity:0;inset:0;cursor:pointer;z-index:2;margin:0;width:100%;height:100%}
+.tog i{position:absolute;inset:0;background:#2a3348;border-radius:20px;transition:.2s}
+.tog i::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.2s}
+.tog input:checked+i{background:var(--g)}.tog input:checked+i::after{inset-inline-start:22px;background:#04140b}
+.seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{padding:6px 16px;border-radius:9px;color:var(--muted)}.seg button.on{background:var(--grad);color:#04140b;font-weight:700}
+.wrow{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:10px;flex-wrap:wrap}
+.wrow .th{width:92px;height:43px;border-radius:8px;background:#1b2336;object-fit:cover;flex:none}
+.wrow .t{flex:1;min-width:180px}.wrow .t b{display:block}
+.sugg{position:absolute;z-index:20;top:100%;inset-inline:0;background:var(--card2);border:1px solid var(--line);border-radius:12px;margin-top:4px;max-height:300px;overflow:auto;box-shadow:var(--shadow)}
+.sugg button{display:flex;gap:10px;align-items:center;width:100%;padding:8px 12px;text-align:start}.sugg button:hover{background:var(--card)}
+.sugg img{width:64px;height:30px;object-fit:cover;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:start;padding:10px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--card)}
+tr:hover td{background:var(--card2)}
+.bars{display:flex;align-items:flex-end;gap:14px;height:170px;padding:10px 4px}
+.bars div.c{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bars .stack{display:flex;gap:4px;align-items:flex-end;height:130px}
+.bars .b{width:20px;border-radius:6px 6px 0 0;min-height:3px}
+.rank{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}.rank:last-child{border:0}
+.rank i{font-style:normal;width:26px;height:26px;border-radius:8px;background:var(--card2);display:grid;place-items:center;font-size:12.5px;color:var(--muted)}
+.rank .bar{height:6px;border-radius:6px;background:var(--grad);margin-top:4px}
+.empty{text-align:center;color:var(--muted);padding:46px 10px;background:var(--card);border:1px dashed var(--line);border-radius:16px}
+.empty big{display:block;font-size:46px;margin-bottom:8px}
+.skel{height:230px;border-radius:16px;background:linear-gradient(90deg,var(--card),var(--card2),var(--card));background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(139,123,255,.18),rgba(53,208,255,.12));border:1px solid rgba(139,123,255,.35);border-radius:14px;padding:12px 16px;margin-bottom:18px;flex-wrap:wrap}
+.health{display:flex;gap:8px;flex-wrap:wrap}
+.hp{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-size:13px}
+.err{color:var(--red);font-size:12.5px}
+#toasts{position:fixed;bottom:18px;inset-inline-start:18px;display:flex;flex-direction:column;gap:8px;z-index:99}
+.toast{background:var(--card2);border:1px solid var(--line);border-inline-start:4px solid var(--g);border-radius:12px;padding:11px 16px;box-shadow:var(--shadow);animation:in .25s}
+.toast.bad{border-inline-start-color:var(--red)}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.modal{position:fixed;inset:0;background:rgba(3,5,9,.72);backdrop-filter:blur(4px);display:grid;place-items:center;z-index:90;padding:20px}
+.modal>div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;max-width:min(720px,100%);max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.modal img.pv{width:100%;border-radius:12px}
+pre.log{background:var(--bg2);border-radius:10px;padding:12px;max-height:50vh;overflow:auto;font-size:12px;direction:ltr;text-align:left;white-space:pre-wrap}
+@media (max-width:900px){aside{width:72px;padding:12px 8px}.logo div,nav button span.l,.saved,.side-foot .pill span{display:none}nav button{justify-content:center;padding:12px}nav .cnt{display:none}#view{padding:16px}header{padding:12px 16px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo">
+    <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0f1320"/><circle cx="32" cy="32" r="22" fill="none" stroke="url(#g)" stroke-width="3.5"/><circle cx="32" cy="32" r="12" fill="none" stroke="url(#g)" stroke-width="3.5"/><circle cx="32" cy="32" r="4" fill="#ff5c70"/><path d="M32 5v12M32 47v12M5 32h12M47 32h12" stroke="url(#g)" stroke-width="3.5" stroke-linecap="round"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22e678"/><stop offset="1" stop-color="#35d0ff"/></linearGradient></defs></svg>
+    <div><b>صايد الفرصة</b><small id="ver">DealHunter</small></div>
+  </div>
+  <nav id="nav"></nav>
+  <div class="side-foot">
+    <div class="saved"><small>💰 وفّرت لحد دلوقتي</small><b class="num" id="saved">$0.00</b></div>
+    <div class="pill"><i class="dot" id="sdot"></i><span id="stext">بيحمّل…</span></div>
+  </div>
+</aside>
+<main>
+  <header>
+    <h1 id="title"></h1>
+    <div class="search"><input id="q" type="text" placeholder="ابحث باسم اللعبة…  ( / )" autocomplete="off"><span>🔎</span></div>
+    <button class="btn pri" id="checkBtn">🔄 افحص دلوقتي</button>
+  </header>
+  <div id="view"></div>
+</main>
+<div id="toasts"></div>
+<script>
+"use strict";
+/* ============ أساسيات ============ */
+const P = new URLSearchParams(location.search);
+const TOKEN = P.get("t") || sessionStorage.getItem("dh_t") || "";
+sessionStorage.setItem("dh_t", TOKEN);
+const $ = s => document.querySelector(s);
+function h(tag, props, ...kids){
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})){
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "style") e.style.cssText = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (k === "value") e.value = v;
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat(Infinity)){ if (c == null || c === false) continue; e.append(c instanceof Node ? c : document.createTextNode(String(c))); }
+  return e;
+}
+async function api(path, body){
+  const opt = {headers: {"X-Token": TOKEN}};
+  if (body !== undefined){ opt.method = "POST"; opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+  const r = await fetch("/api/" + path, opt);
+  let j = {}; try { j = await r.json(); } catch (_) {}
+  if (!r.ok) throw new Error(j.error || ("خطأ " + r.status));
+  return j;
+}
+function toast(msg, bad){ const t = h("div", {class: "toast" + (bad ? " bad" : "")}, msg); $("#toasts").append(t); setTimeout(() => t.remove(), 4200); }
+const money = n => "$" + (Number(n) || 0).toFixed(2);
+const num = (t) => h("span", {class: "num"}, t);
+const safeImg = u => (typeof u === "string" && /^https:\/\//.test(u)) ? u : null;
+const unit = (n, one, two, few, many) => n === 1 ? one : n === 2 ? two : (n >= 3 && n <= 10) ? n + " " + few : n + " " + many;
+function left(end){
+  const s = Math.floor(end - Date.now() / 1000);
+  if (s <= 0) return "العرض خلص";
+  const d = Math.floor(s / 86400), hr = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), p = [];
+  if (d) p.push(unit(d, "يوم", "يومين", "أيام", "يوم"));
+  if (hr) p.push(unit(hr, "ساعة", "ساعتين", "ساعات", "ساعة"));
+  if (m && !d) p.push(unit(m, "دقيقة", "دقيقتين", "دقايق", "دقيقة"));
+  return "فاضل " + (p.join(" و") || "أقل من دقيقة");
+}
+function ago(ts){
+  if (!ts) return "لسه";
+  const s = Math.floor(Date.now() / 1000 - ts);
+  if (s < 90) return "من شوية";
+  const m = Math.floor(s / 60); if (m < 60) return "من " + unit(m, "دقيقة", "دقيقتين", "دقايق", "دقيقة");
+  const hr = Math.floor(m / 60); if (hr < 24) return "من " + unit(hr, "ساعة", "ساعتين", "ساعات", "ساعة");
+  return "من " + unit(Math.floor(hr / 24), "يوم", "يومين", "أيام", "يوم");
+}
+function inn(ts){
+  const s = Math.max(0, Math.floor(ts - Date.now() / 1000)), m = Math.ceil(s / 60);
+  return m <= 1 ? "كمان شوية" : m < 60 ? "بعد " + unit(m, "دقيقة", "دقيقتين", "دقايق", "دقيقة") : "بعد " + unit(Math.round(m / 60), "ساعة", "ساعتين", "ساعات", "ساعة");
+}
+const COLORS = {Steam: "#66c0f4", Epic: "#f1f5f9", GOG: "#b57cff", Humble: "#ff5c5c", Fanatical: "#ff9b3d", GMG: "#3ddc84", "itch.io": "#fa5c5c",
+  "Prime Gaming": "#00a8e1", Ubisoft: "#3b82f6", "EA/Origin": "#ff4747", GamersGate: "#f59e0b", Gamesplanet: "#14b8a6", Blizzard: "#00aeff"};
+const storeBadge = s => h("span", {class: "badge"}, h("i", {class: "sd", style: "background:" + (COLORS[s] || "#8a94ab")}), s);
+const openUrl = url => api("open", {url}).catch(e => toast(e.message, true));
+
+/* ============ الحالة ============ */
+let S = null, page = "home", Q = "", dirty = false, busy = false;
+const F = {free: "all", hideOwnedFree: false, store: "all", min: 50, max: "", sort: "savings", low: false, hideOwned: true, limit: 24,
+  hist: {kind: "all", store: "", q: ""}, hero: 0, canrun: false, pcLv: "run"};
+const PAGES = [["home", "🏠", "الرئيسية"], ["free", "🎁", "ببلاش"], ["deals", "🔥", "الخصومات"], ["wish", "⭐", "الأمنيات"], ["pc", "💻", "جهازي"],
+  ["stats", "📊", "الإحصائيات"], ["hist", "📜", "السجل"], ["set", "⚙️", "الإعدادات"]];
+const TITLES = Object.fromEntries(PAGES.map(p => [p[0], p[1] + " " + p[2]]));
+const match = t => !Q || (t || "").toLowerCase().includes(Q);
+
+async function refresh(force){
+  if (busy) return; busy = true;
+  try {
+    const j = await api("state" + (S && !force ? "?rev=" + S.rev : ""));
+    if (!j.same){ S = j; onState(); }
+    setLive(true);
+  } catch (e){ setLive(false); }
+  busy = false;
+}
+function setLive(ok){ if (!ok){ $("#sdot").className = "dot bad"; $("#stext").textContent = "مفيش اتصال بالبرنامج"; } }
+function typing(){ const a = document.activeElement; return a && (a.tagName === "INPUT" || a.tagName === "SELECT") && a.closest("#view"); }
+function onState(){
+  $("#saved").textContent = money(S.saved);
+  $("#ver").textContent = "DealHunter v" + S.version;
+  const srcs = Object.values(S.sources).filter(s => s.enabled), bad = srcs.filter(s => s.ok === false).length;
+  const last = Math.max(0, ...srcs.map(s => s.last || 0));
+  $("#sdot").className = "dot " + (S.steam.syncing ? "spin" : bad ? "bad" : last ? "ok" : "spin");
+  $("#stext").textContent = bad ? bad + " مصدر مش بيرد" : last ? "آخر فحص " + ago(last) : "بيفحص أول مرة…";
+  buildNav();
+  if (typing()){ dirty = true; return; }
+  render();
+}
+function buildNav(){
+  const counts = {free: S.free.filter(g => !g.owned).length, deals: 0, wish: S.wishlist.filter(w => w.status && w.status.savings >= 10).length};
+  const n = $("#nav"); n.replaceChildren(...PAGES.map(([k, i, l]) => h("button", {class: page === k ? "on" : "", onclick: () => go(k)},
+    h("span", {class: "ico"}, i), h("span", {class: "l"}, l), counts[k] ? h("span", {class: "cnt"}, counts[k]) : null)));
+}
+function go(p){ page = p; $("#q").value = ""; Q = ""; F.limit = 24; buildNav(); S ? render() : null; $("#view").scrollTop = 0; }
+
+/* ============ مكونات ============ */
+function imgBox(url, ...overlay){
+  const b = h("div", {class: "img"}, "🎮");
+  const u = safeImg(url);
+  if (u){ const im = h("img", {src: u, loading: "lazy", alt: "", referrerpolicy: "no-referrer"}); im.onerror = () => im.remove(); b.append(im); }
+  b.append(...overlay.filter(Boolean));
+  return b;
+}
+function cd(end, cls){ return h("span", {class: cls || "cd", "data-end": end}, left(end)); }
+
+const LV = {great: ["✅", "يشتغل ممتاز"], ok: ["🟡", "يشتغل بإعدادات أقل"], no: ["❌", "مش هيشتغل"]};
+function verdict(app){
+  const v = app && S.canrun[String(app)];
+  if (!v || !LV[v.level]) return null;
+  return h("span", {class: "badge v-" + v.level, title: v.reasons.join(" · ")}, LV[v.level][0] + " " + LV[v.level][1]);
+}
+const okRun = d => { const v = d.app && S.canrun[String(d.app)]; return !!v && (v.level === "great" || v.level === "ok"); };
+async function scan(apps){
+  apps = [...new Set(apps)].filter(a => !S.canrun[String(a)]).slice(0, 80);
+  if (!apps.length){ toast("كل الألعاب دي اتفحصت قبل كده ✅"); return; }
+  try { const r = await api("pc/scan", {apps}); toast(r.ok ? "بيجيب متطلبات " + apps.length + " لعبة من Steam…" : "فيه فحص شغال، استنى يخلص"); refresh(true); }
+  catch (e){ toast(e.message, true); }
+}
+function freeCard(g){
+  const claimed = S.claimed.includes(g.key);
+  return h("div", {class: "card" + (g.owned || claimed ? " done" : "")},
+    imgBox(g.image, h("div", {class: "tag"}, h("span", {class: "badge free"}, "ببلاش 🎁"), g.owned ? h("span", {class: "badge own"}, "معاك") : null),
+      h("div", {class: "tag2"}, storeBadge(g.store))),
+    h("div", {class: "body"}, h("h3", {title: g.title}, h("bdi", {}, g.title)),
+      h("div", {class: "meta"}, g.normal ? ["كانت ", h("s", {}, num(money(g.normal)))] : null, g.end_ts ? cd(g.end_ts) : h("span", {}, "لفترة محدودة")),
+      g.note ? h("div", {class: "meta", style: "font-size:12px"}, g.note) : null,
+      h("div", {class: "acts"},
+        h("button", {class: "btn pri sm", onclick: () => openUrl(g.url)}, "🎁 احصل عليها"),
+        h("button", {class: "btn sm", title: "كارت مشاركة", onclick: () => shareModal(g)}, "📤"),
+        h("button", {class: "btn sm", title: "خدتها (يتحسب في التوفير)", disabled: claimed, onclick: () => mark("claimed", g.key, g.normal)}, claimed ? "✓" : "☑️"))));
+}
+function dealCard(d){
+  const bought = S.bought.includes(String(d.game_id || d.id));
+  return h("div", {class: "card" + (d.owned || bought ? " done" : "")},
+    imgBox(d.image, h("div", {class: "tag"}, h("span", {class: "badge off"}, "-" + Math.round(d.savings) + "%"), d.low ? h("span", {class: "badge low"}, "🔥 أقل سعر") : null, d.owned ? h("span", {class: "badge own"}, "معاك") : null),
+      h("div", {class: "tag2"}, storeBadge(d.store))),
+    h("div", {class: "body"}, h("h3", {title: d.title}, h("bdi", {}, d.title)),
+      h("div", {class: "price"}, h("b", {class: "num"}, money(d.sale)), h("s", {class: "num"}, money(d.normal)), d.metacritic ? h("span", {class: "badge own", style: "margin-inline-start:auto"}, "MC " + d.metacritic) : null),
+      verdict(d.app) ? h("div", {class: "meta"}, verdict(d.app)) : null,
+      d.ends ? h("div", {class: "meta"}, "⏳ ", cd(d.ends)) : null,
+      h("div", {class: "acts"},
+        h("button", {class: "btn pri sm", onclick: () => openUrl(d.url)}, "افتح العرض"),
+        h("button", {class: "btn sm", title: "ضيفها للأمنيات", onclick: () => addWish({title: d.title, app: d.app})}, "⭐"),
+        h("button", {class: "btn sm", title: "اشتريتها (يتحسب في التوفير)", disabled: bought, onclick: () => mark("bought", String(d.game_id || d.id), d.normal - d.sale)}, bought ? "✓" : "🛒"))));
+}
+async function mark(kind, id, amount){
+  try { const r = await api("mark", {kind, id, amount}); toast(r.added ? "اتحسبت في عداد التوفير 💰 +" + money(amount) : "اتحسبت قبل كده"); refresh(true); } catch (e){ toast(e.message, true); }
+}
+async function addWish(o){
+  try { await api("wishlist/add", {mode: "50", repeat: "change", ...o}); toast("⭐ اتضافت للأمنيات: هنبلّغك لما ينزل عليها خصم 50%+"); refresh(true); } catch (e){ toast(e.message, true); }
+}
+function modal(...kids){
+  const m = h("div", {class: "modal", onclick: e => { if (e.target === m) m.remove(); }}, h("div", {}, kids, h("button", {class: "btn", onclick: () => m.remove()}, "إغلاق")));
+  document.body.append(m); return m;
+}
+function shareModal(g){
+  const txt = `🎁 لعبة ببلاش على ${g.store}: ${g.title}${g.normal ? " (كانت " + money(g.normal) + ")" : ""}\nخدها قبل ما العرض يخلص: ${g.url}`;
+  const src = `/api/share/${encodeURIComponent(g.key)}.png?t=${encodeURIComponent(TOKEN)}`;
+  modal(h("h3", {}, "📤 شارك اللعبة"), h("img", {class: "pv", src, alt: "كارت"}),
+    h("div", {class: "row2"}, h("button", {class: "btn pri", onclick: () => navigator.clipboard.writeText(txt).then(() => toast("اتنسخت الرسالة ✅"))}, "📋 انسخ الرسالة"),
+      h("a", {class: "btn", href: src, download: "dealhunter-card.png"}, "💾 احفظ الصورة")));
+}
+function empty(icon, text, extra){ return h("div", {class: "empty"}, h("big", {}, icon), text, extra ? h("div", {style: "margin-top:14px"}, extra) : null); }
+function section(title, sub, body, more){ return h("section", {class: "sec"}, h("h2", {}, title, sub ? h("small", {}, sub) : null, more ? h("span", {class: "more"}, more) : null), body); }
+function skeleton(){ return h("div", {class: "grid"}, [1, 2, 3, 4, 5, 6].map(() => h("div", {class: "skel"}))); }
+
+/* ============ الصفحات ============ */
+function render(){
+  dirty = false;
+  $("#title").textContent = TITLES[page];
+  const v = $("#view"), keep = v.scrollTop;
+  v.replaceChildren(S ? PAGE_FN[page]() : skeleton());
+  v.scrollTop = keep;
+  tick();
+}
+const PAGE_FN = {home, free: freePage, deals: dealsPage, wish: wishPage, pc: pcPage, stats: statsPage, hist: histPage, set: settingsPage};
+
+function home(){
+  const free = S.free.filter(g => !g.owned), root = h("div");
+  if (S.windows && !S.asked_autostart) root.append(h("div", {class: "banner"}, "🚀 تشغّل صايد الفرصة مع الويندوز؟ بيفضل في الخلفية بحجم صغير جداً وبيبلّغك أول ما ينزل حاجة.",
+    h("button", {class: "btn pri sm", onclick: () => api("autostart", {on: true}).then(() => { toast("اتفعّل ✅"); refresh(true); })}, "آه، شغّله"),
+    h("button", {class: "btn sm", onclick: () => api("autostart", {on: false}).then(() => refresh(true))}, "لأ شكراً")));
+  if (!S.steam.linked) root.append(h("div", {class: "banner"}, "🔗 اربط حساب Steam (من غير باسورد) وأنا أستورد الأمنيات وأخفي اللي معاك تلقائي.",
+    h("button", {class: "btn pri sm", onclick: () => go("set")}, "اربط الحساب")));
+  if (free.length){
+    const i = F.hero % free.length, g = free[i], u = safeImg(g.image);
+    root.append(h("div", {class: "hero"}, h("div", {class: "bg", style: u ? `background-image:url("${u}")` : ""}),
+      free.length > 1 ? h("div", {class: "dots"}, free.slice(0, 8).map((_, k) => h("i", {class: k === i ? "on" : "", onclick: () => { F.hero = k; render(); }}))) : null,
+      h("div", {class: "in"}, h("div", {class: "row"}, h("span", {class: "badge free"}, "🎁 ببلاش دلوقتي"), storeBadge(g.store), g.end_ts ? h("span", {class: "badge"}, "⏳ ", cd(g.end_ts)) : null),
+        h("h2", {}, h("bdi", {}, g.title)), g.normal ? h("div", {class: "meta"}, "السعر الأصلي ", h("s", {}, num(money(g.normal)))) : null,
+        h("div", {class: "row"}, h("button", {class: "btn pri", onclick: () => openUrl(g.url)}, "🎁 احصل عليها دلوقتي"),
+          h("button", {class: "btn", onclick: () => shareModal(g)}, "📤 شاركها"),
+          h("button", {class: "btn", disabled: S.claimed.includes(g.key), onclick: () => mark("claimed", g.key, g.normal)}, S.claimed.includes(g.key) ? "✓ خدتها" : "☑️ خدتها")))));
+  }
+  const sm = S.summary;
+  root.append(h("div", {class: "kpis"},
+    kpi("g", "💰 وفّرت", money(S.saved)), kpi("c", "🎁 ألعاب مجانية اتسجلت", sm.free_n), kpi("y", "🔥 خصومات اتسجلت", sm.deal_n), kpi("v", "⭐ في قايمة الأمنيات", S.wishlist.length)));
+  const rest = free.filter(g => match(g.title));
+  if (rest.length > 1) root.append(section("🎁 كل المجاني دلوقتي", rest.length + " لعبة", h("div", {class: "grid"}, rest.map(freeCard)), h("button", {class: "btn sm", onclick: () => go("free")}, "شوف الكل ←")));
+  if (S.upcoming.length) root.append(section("⏭️ جاي على Epic", null, h("div", {class: "grid"}, S.upcoming.filter(g => match(g.title)).map(g => h("div", {class: "card"},
+    imgBox(g.image, h("div", {class: "tag"}, h("span", {class: "badge"}, "قريباً"))), h("div", {class: "body"}, h("h3", {}, h("bdi", {}, g.title)), h("div", {class: "meta"}, "⏳ بيبدأ ", g.start_ts ? cd(g.start_ts) : "")))))));
+  const top = S.deals.filter(d => !d.owned && match(d.title)).slice(0, 8);
+  root.append(section("🔥 أحسن الخصومات", S.deals.length + " عرض", top.length ? h("div", {class: "grid"}, top.map(dealCard)) : empty("🔎", "مفيش عروض مطابقة دلوقتي"), h("button", {class: "btn sm", onclick: () => go("deals")}, "شوف الكل ←")));
+  root.append(section("📡 صحة المصادر", null, healthRow()));
+  return root;
+}
+const kpi = (c, l, v) => h("div", {class: "kpi " + c}, h("small", {}, l), h("b", {class: "num"}, v));
+function healthRow(){
+  return h("div", {class: "health"}, Object.values(S.sources).map(s => h("div", {class: "hp", title: s.err || ""}, h("i", {class: "dot " + (!s.enabled ? "" : s.ok === false ? "bad" : s.ok ? "ok" : "spin")}),
+    s.label, h("span", {style: "color:var(--muted)"}, !s.enabled ? "(مقفول)" : s.ok === false ? "مش بيرد" : s.ok ? ago(s.last) : "…"))));
+}
+function freePage(){
+  const stores = ["all", ...new Set(S.free.map(g => g.store))];
+  let list = S.free.filter(g => (F.free === "all" || g.store === F.free) && match(g.title) && !(F.hideOwnedFree && g.owned));
+  return h("div", {}, h("div", {class: "chips"}, stores.map(s => h("button", {class: "chip" + (F.free === s ? " on" : ""), onclick: () => { F.free = s; render(); }}, s === "all" ? "الكل" : s)),
+    h("label", {class: "chip"}, h("input", {type: "checkbox", checked: F.hideOwnedFree, onchange: e => { F.hideOwnedFree = e.target.checked; render(); }}), " اخفي اللي معايا")),
+    list.length ? h("div", {class: "grid"}, list.map(freeCard)) : empty("🎁", "مفيش ألعاب مجانية مطابقة دلوقتي. هبلّغك أول ما تنزل!"),
+    S.upcoming.length ? section("⏭️ جاي على Epic", null, h("div", {class: "grid"}, S.upcoming.map(g => h("div", {class: "card"}, imgBox(g.image), h("div", {class: "body"}, h("h3", {}, h("bdi", {}, g.title))))))) : null);
+}
+function dealsPage(){
+  let l = S.deals.filter(d => d.savings >= F.min && (F.store === "all" || d.store === F.store) && match(d.title) && !(F.hideOwned && d.owned) && (!F.low || d.low) && (F.max === "" || d.sale <= Number(F.max)) && (!F.canrun || okRun(d)));
+  const S_ = {savings: (a, b) => b.savings - a.savings, price: (a, b) => a.sale - b.sale, normal: (a, b) => b.normal - a.normal, mc: (a, b) => b.metacritic - a.metacritic};
+  l = l.sort(S_[F.sort]);
+  const sel = (key, opts, parse) => h("select", {onchange: e => { F[key] = parse ? parse(e.target.value) : e.target.value; F.limit = 24; render(); }},
+    opts.map(([v, t]) => h("option", {value: v, selected: String(F[key]) === String(v)}, t)));
+  return h("div", {}, h("div", {class: "chips"}, ["all", ...S.stores].map(s => h("button", {class: "chip" + (F.store === s ? " on" : ""), onclick: () => { F.store = s; F.limit = 24; render(); }}, s === "all" ? "كل المتاجر" : s))),
+    h("div", {class: "toolbar"},
+      h("label", {}, "أقل خصم", sel("min", [[50, "50%"], [60, "60%"], [75, "75%"], [90, "90%"]], Number)),
+      h("label", {}, "ترتيب", sel("sort", [["savings", "أعلى خصم"], ["price", "الأرخص"], ["normal", "الأغلى أصلاً"], ["mc", "الأعلى تقييم"]])),
+      h("label", {}, "أقصى سعر $", h("input", {type: "number", min: 0, style: "width:80px", value: F.max, onchange: e => { F.max = e.target.value; F.limit = 24; render(); }})),
+      h("label", {}, h("input", {type: "checkbox", checked: F.low, onchange: e => { F.low = e.target.checked; render(); }}), "🔥 أقل سعر تاريخي بس"),
+      h("label", {title: "بيجيب متطلبات الألعاب من Steam ويقارنها بمواصفات جهازك"}, h("input", {type: "checkbox", checked: F.canrun, onchange: e => {
+        F.canrun = e.target.checked;
+        if (F.canrun) scan(S.deals.filter(d => d.app && d.savings >= F.min && !d.owned).slice(0, 80).map(d => d.app));
+        render(); }}), "💻 اللي يشتغل على جهازي بس"),
+      h("label", {}, h("input", {type: "checkbox", checked: F.hideOwned, onchange: e => { F.hideOwned = e.target.checked; render(); }}), "اخفي اللي معايا"),
+      h("span", {style: "margin-inline-start:auto;color:var(--muted)"}, l.length + " عرض")),
+    F.canrun && S.pc.scan.running ? h("div", {class: "banner"}, "⏳ بيجيب متطلبات الألعاب من Steam… " + S.pc.scan.done + "/" + S.pc.scan.total) : null,
+    l.length ? h("div", {class: "grid"}, l.slice(0, F.limit).map(dealCard)) : empty("🔎", F.canrun && !S.pc.scan.running ? "مفيش عروض مؤكد إنها تشتغل على جهازك بالفلاتر دي (الألعاب اللي مالهاش متطلبات على Steam مش بتظهر)." : "مفيش عروض بالفلاتر دي. جرّب تقلل أقل خصم."),
+    l.length > F.limit ? h("div", {style: "text-align:center;margin-top:20px"}, h("button", {class: "btn", onclick: () => { F.limit += 24; render(); }}, "عرض المزيد (" + (l.length - F.limit) + ")")) : null);
+}
+/* ---- الأمنيات ---- */
+const MODES = {any: "أي خصم", "50": "خصم 50%+", "75": "خصم 75%+", free: "لما تبقى ببلاش بس"};
+const REPS = {once: "مرة واحدة", change: "كل ما السعر يتغير", "6h": "كل 6 ساعات", always: "كل فحص"};
+const optSel = (map, cur, on) => h("select", {onchange: e => on(e.target.value)}, Object.entries(map).map(([k, t]) => h("option", {value: k, selected: k === cur}, t)));
+let chosen = null, sugTimer = null;
+function wishPage(){
+  const input = h("input", {type: "text", placeholder: "اسم اللعبة… (هيظهرلك اقتراحات)", style: "width:100%", autocomplete: "off"});
+  const sug = h("div", {class: "sugg", hidden: true});
+  const mode = optSel(MODES, "50", () => {}), rep = optSel(REPS, "change", () => {}), mp = h("input", {type: "number", min: 0, step: "0.5", placeholder: "أقصى سعر $", style: "width:110px"});
+  input.oninput = () => {
+    chosen = null; clearTimeout(sugTimer);
+    sugTimer = setTimeout(async () => {
+      if (input.value.trim().length < 2){ sug.hidden = true; return; }
+      try {
+        const r = (await api("search?q=" + encodeURIComponent(input.value.trim()))).results;
+        sug.replaceChildren(...r.map(x => h("button", {onclick: () => { input.value = x.title; chosen = x; sug.hidden = true; }},
+          x.thumb ? h("img", {src: safeImg(x.thumb) || "", alt: "", referrerpolicy: "no-referrer"}) : null, h("span", {}, x.title), h("span", {style: "margin-inline-start:auto;color:var(--muted)"}, x.cheapest ? "من " + money(x.cheapest) : ""))));
+        sug.hidden = !r.length;
+      } catch (_) { sug.hidden = true; }
+    }, 300);
+  };
+  const add = async () => {
+    const t = input.value.trim(); if (!t) return;
+    try { await api("wishlist/add", {title: t, app: chosen && chosen.app, gid: chosen && chosen.gid, mode: mode.value, repeat: rep.value, max_price: mp.value}); input.value = ""; chosen = null; toast("⭐ اتضافت"); refresh(true); }
+    catch (e){ toast(e.message, true); }
+  };
+  input.onkeydown = e => { if (e.key === "Enter") add(); };
+  const list = S.wishlist.filter(w => match(w.title));
+  return h("div", {}, h("div", {class: "panel"}, h("h3", {}, "➕ ضيف لعبة"), h("p", {class: "sub"}, "اختار نوع التنبيه وهبلّغك بالظبط لما الشرط يتحقق — من 10 متاجر + المجانيات."),
+    h("div", {class: "row2"}, h("div", {style: "position:relative;flex:1;min-width:240px"}, input, sug), mode, rep, mp, h("button", {class: "btn pri", onclick: add}, "إضافة"))),
+    list.length ? list.map(wishRow) : empty("⭐", "قايمتك فاضية", h("button", {class: "btn pri", onclick: () => go("set")}, "استورد من Steam")));
+}
+function wishRow(w){
+  const st = w.status, upd = ch => api("wishlist/update", {title: w.title, ...ch}).catch(e => toast(e.message, true));
+  const stat = w.owned ? h("span", {class: "badge own"}, "✓ معاك") : !st ? h("span", {style: "color:var(--muted)"}, "لسه مفيش سعر") :
+    st.sale === 0 ? h("span", {class: "badge free"}, "ببلاش 🎁 " + st.store) :
+    st.savings >= 1 ? h("span", {}, h("span", {class: "badge off"}, "-" + Math.round(st.savings) + "%"), " ", num(money(st.sale)), " · " + st.store) : h("span", {style: "color:var(--muted)"}, num(money(st.sale)), " · مفيش خصم");
+  return h("div", {class: "wrow"}, safeImg(st && st.image) ? h("img", {class: "th", src: st.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer"}) : h("div", {class: "th"}),
+    h("div", {class: "t"}, h("b", {}, h("bdi", {}, w.title)), stat, " ", verdict(w.app)),
+    optSel(MODES, w.mode, v => upd({mode: v})), optSel(REPS, w.repeat, v => upd({repeat: v})),
+    h("input", {type: "number", min: 0, step: "0.5", placeholder: "أقصى سعر", style: "width:100px", value: w.max_price ?? "", onchange: e => upd({max_price: e.target.value})}),
+    st && st.url ? h("button", {class: "btn sm", onclick: () => openUrl(st.url)}, "افتح") : null,
+    h("button", {class: "btn sm danger", onclick: () => api("wishlist/remove", {title: w.title}).then(() => refresh(true))}, "🗑"));
+}
+/* ---- جهازي ---- */
+function pcPage(){
+  const pc = S.pc, sp = pc.spec, ov = pc.override || {}, sc = pc.scan;
+  const f = (key, ph, w, type) => h("input", {type: type || "text", step: type ? "any" : null, min: type ? 0 : null, value: ov[key] ?? "", placeholder: ph, style: "width:" + w, dir: "ltr"});
+  const iGpu = f("gpu", sp.gpu || "مثال: NVIDIA GeForce GTX 1650", "260px"), iCpu = f("cpu", sp.cpu || "مثال: Intel Core i5-9400F", "260px");
+  const iRam = f("ram_gb", sp.ram_gb ? sp.ram_gb + "" : "16", "90px", "number"), iVram = f("vram_gb", sp.vram_gb ? sp.vram_gb + "" : "4", "90px", "number"), iDisk = f("disk_gb", sp.disk_gb ? sp.disk_gb + "" : "100", "90px", "number");
+  const cand = [...S.deals.filter(d => d.app && !d.owned && d.savings >= 50).map(d => d.app), ...S.wishlist.filter(w => w.app && !w.owned).map(w => w.app)];
+  const items = [], seen = new Set();
+  for (const d of S.deals){ if (d.app && !seen.has(d.app) && S.canrun[String(d.app)] && match(d.title)){ seen.add(d.app); items.push(d); } }
+  const lvl = d => S.canrun[String(d.app)].level;
+  const cnt = {great: items.filter(d => lvl(d) === "great").length, ok: items.filter(d => lvl(d) === "ok").length, no: items.filter(d => lvl(d) === "no").length};
+  const shown = items.filter(d => F.pcLv === "all" || (F.pcLv === "run" ? lvl(d) !== "no" && lvl(d) !== "unknown" : lvl(d) === F.pcLv)).sort((a, b) => b.savings - a.savings);
+  const spec = (l, v) => h("div", {}, h("small", {}, l), h("b", {}, h("bdi", {}, v || "؟")));
+  return h("div", {},
+    h("div", {class: "panel"}, h("h3", {}, "💻 مواصفات جهازك"),
+      h("p", {class: "sub"}, pc.detected ? "اتعرفت تلقائي. لو فيه حاجة غلط عدّلها تحت." : "لسه بيتعرّف على جهازك… أو اضغط اكتشاف."),
+      h("div", {class: "specs"}, spec("🎮 كارت الشاشة", sp.gpu), spec("📼 VRAM", sp.vram_gb ? sp.vram_gb + " GB" : ""), spec("🧠 المعالج", sp.cpu), spec("🧩 الرام", sp.ram_gb ? sp.ram_gb + " GB" : ""), spec("💾 أكبر مساحة فاضية", sp.disk_gb ? sp.disk_gb + " GB" : "")),
+      h("div", {class: "row2"}, h("button", {class: "btn", onclick: async e => { e.currentTarget.disabled = true; try { await api("pc/detect", {}); toast("اتحدّثت المواصفات ✅"); } catch (er){ toast(er.message, true); } refresh(true); }}, "🔍 اكتشف مواصفات جهازي")),
+      h("details", {}, h("summary", {style: "cursor:pointer;color:var(--c)"}, "✏️ تعديل المواصفات يدوي (اتركه فاضي لو القراءة صح)"),
+        h("div", {class: "row2"}, h("label", {class: "field"}, h("small", {}, "كارت الشاشة"), iGpu), h("label", {class: "field"}, h("small", {}, "المعالج"), iCpu),
+          h("label", {class: "field"}, h("small", {}, "رام GB"), iRam), h("label", {class: "field"}, h("small", {}, "VRAM GB"), iVram), h("label", {class: "field"}, h("small", {}, "مساحة GB"), iDisk),
+          h("button", {class: "btn pri sm", onclick: () => api("pc/save", {gpu: iGpu.value, cpu: iCpu.value, ram_gb: iRam.value, vram_gb: iVram.value, disk_gb: iDisk.value}).then(() => { toast("اتحفظ ✅"); refresh(true); }).catch(e => toast(e.message, true))}, "حفظ"))),
+      h("p", {class: "sub", style: "margin:10px 0 0"}, "ℹ️ الرام والمساحة مقارنتهم دقيقة. كارت الشاشة والمعالج مقارنتهم تقدير بجدول درجات تقريبي (مش اختبار حقيقي)، فالنتيجة معناها \"على الأغلب\". الألعاب اللي مالهاش متطلبات على Steam (زي معظم مجانيات Epic) مش بتتفحص.")),
+    h("div", {class: "panel"}, h("h3", {}, "🔍 إيه العروض اللي هتشتغل عندك؟"),
+      h("p", {class: "sub"}, "بنجيب متطلبات كل لعبة من Steam مرة واحدة ونخزّنها 30 يوم، فالفحص بيتم بالتدريج وبأقل استهلاك."),
+      h("div", {class: "row2"}, h("button", {class: "btn pri", disabled: sc.running, onclick: () => scan(cand)}, sc.running ? "⏳ بيفحص…" : "🔍 افحص العروض والأمنيات (" + new Set(cand).size + " لعبة)"),
+        sc.error ? h("span", {class: "err"}, "تنبيه: " + sc.error) : null),
+      sc.running ? h("div", {}, h("div", {class: "bar0"}, h("i", {style: `width:${sc.total ? sc.done / sc.total * 100 : 0}%`})), h("small", {style: "color:var(--muted)"}, sc.done + " من " + sc.total)) : null),
+    items.length ? h("div", {}, h("div", {class: "chips"}, [["run", "✅🟡 اللي هيشتغل (" + (cnt.great + cnt.ok) + ")"], ["great", "✅ ممتاز (" + cnt.great + ")"], ["ok", "🟡 بإعدادات أقل (" + cnt.ok + ")"], ["no", "❌ مش هيشتغل (" + cnt.no + ")"], ["all", "الكل"]]
+        .map(([k, t]) => h("button", {class: "chip" + (F.pcLv === k ? " on" : ""), onclick: () => { F.pcLv = k; render(); }}, t))),
+      shown.length ? h("div", {class: "grid"}, shown.map(dealCard)) : empty("🎮", "مفيش ألعاب في الفلتر ده")) :
+      empty("💻", "لسه مفيش نتايج. اضغط \"افحص العروض والأمنيات\" فوق."));
+}
+/* ---- إحصائيات / سجل ---- */
+function statsPage(){
+  const root = h("div", {}, skeleton());
+  (async () => { try {
+    const d = await api("stats"), sm = d.summary, mx = Math.max(1, ...d.monthly.map(m => Math.max(m[1], m[2])));
+    root.replaceChildren(
+      h("div", {class: "kpis"}, kpi("g", "💰 وفّرت", money(S.saved)), kpi("c", "🎁 مجاني", sm.free_n), kpi("y", "💵 قيمة المجاني", money(sm.free_value)), kpi("v", "🎮 ألعاب اتتابعت", sm.games)),
+      h("div", {class: "panel"}, h("h3", {}, "📅 آخر الشهور"), d.monthly.length ? h("div", {class: "bars"}, d.monthly.map(m => h("div", {class: "c"},
+        h("div", {class: "stack"}, h("div", {class: "b", title: "مجاني " + m[1], style: `height:${m[1] / mx * 120}px;background:var(--g)`}), h("div", {class: "b", title: "خصومات " + m[2], style: `height:${m[2] / mx * 120}px;background:var(--gold)`})),
+        h("small", {class: "num", style: "color:var(--muted)"}, m[0])))) : h("p", {class: "sub"}, "الإحصائيات بتتجمع مع الوقت."),
+        h("div", {class: "meta"}, h("span", {}, "🟩 مجاني"), h("span", {}, "🟨 خصومات"))),
+      h("div", {class: "grid", style: "grid-template-columns:repeat(auto-fit,minmax(320px,1fr))"},
+        rankPanel("🎁 أكتر ألعاب نزلت ببلاش", d.top_free, r => r.n + " مرة", r => r.n),
+        rankPanel("🔥 أكتر ألعاب نزل عليها خصم 75%+", d.top_deals, r => r.n + " مرة", r => r.n),
+        rankPanel("🏆 أعلى خصومات", d.best, r => "-" + Math.round(r.best) + "%", r => r.best)));
+  } catch (e){ root.replaceChildren(empty("⚠️", e.message)); } })();
+  return root;
+}
+function rankPanel(title, rows, label, val){
+  const mx = Math.max(1, ...rows.map(val));
+  return h("div", {class: "panel"}, h("h3", {}, title), rows.length ? rows.map((r, i) => h("div", {class: "rank"}, h("i", {}, i + 1),
+    h("div", {style: "flex:1;min-width:0"}, h("div", {style: "display:flex;justify-content:space-between;gap:8px"}, h("span", {style: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap"}, h("bdi", {}, r.title)), h("b", {class: "num"}, label(r))),
+      h("div", {class: "bar", style: `width:${val(r) / mx * 100}%`})))) : h("p", {class: "sub"}, "لسه مفيش بيانات."));
+}
+let histTimer = null;
+function histPage(){
+  const H = F.hist, box = h("div", {}, skeleton());
+  const load = async () => {
+    try {
+      const r = (await api(`history?kind=${H.kind}&store=${encodeURIComponent(H.store)}&q=${encodeURIComponent(H.q || Q)}&limit=300`)).rows;
+      box.replaceChildren(r.length ? h("div", {class: "panel", style: "padding:0;overflow:auto;max-height:68vh"}, h("table", {}, h("thead", {}, h("tr", {}, ["التاريخ", "النوع", "اللعبة", "المتجر", "السعر", "الخصم"].map(x => h("th", {}, x)))),
+        h("tbody", {}, r.map(x => h("tr", {}, h("td", {class: "num"}, new Date(x.first_seen * 1000).toLocaleString("en-GB", {dateStyle: "short", timeStyle: "short"})),
+          h("td", {}, x.kind === "free" ? "🎁 ببلاش" : "🔥 خصم"), h("td", {}, h("a", {href: "#", onclick: e => { e.preventDefault(); openUrl(x.url); }}, h("bdi", {}, x.title))), h("td", {}, x.store),
+          h("td", {class: "num"}, x.sale === 0 ? "FREE" : money(x.sale), " ", h("s", {style: "color:var(--muted)"}, money(x.normal))), h("td", {class: "num"}, Math.round(x.savings) + "%")))))) : empty("📜", "مفيش حاجة في السجل بالفلاتر دي"));
+    } catch (e){ box.replaceChildren(empty("⚠️", e.message)); }
+  };
+  clearTimeout(histTimer); histTimer = setTimeout(load, 0);
+  return h("div", {}, h("div", {class: "toolbar"},
+    h("div", {class: "seg"}, [["all", "الكل"], ["free", "ببلاش 🎁"], ["deal", "خصومات 🔥"]].map(([k, t]) => h("button", {class: H.kind === k ? "on" : "", onclick: () => { H.kind = k; render(); }}, t))),
+    h("select", {onchange: e => { H.store = e.target.value; render(); }}, ["", "Steam", "Epic", "GOG", "Humble", "Fanatical", "GMG", "itch.io", "Prime Gaming", "Ubisoft"].map(s => h("option", {value: s, selected: H.store === s}, s || "كل المتاجر"))),
+    h("a", {class: "btn sm", style: "margin-inline-start:auto", href: `/api/export.csv?t=${encodeURIComponent(TOKEN)}`, download: "dealhunter-history.csv"}, "📤 تصدير CSV"),
+    h("button", {class: "btn sm danger", onclick: () => { const m = modal(h("h3", {}, "تمسح السجل كله؟"), h("p", {}, "الأمنيات والإعدادات مش هيتأثروا."),
+      h("button", {class: "btn danger", onclick: () => api("history/clear", {}).then(() => { m.remove(); toast("اتمسح"); render(); })}, "آه امسح"));}}, "🗑 مسح")), box);
+}
+/* ---- الإعدادات ---- */
+function tog(label, desc, checked, on){ return h("div", {class: "sw"}, h("div", {}, h("div", {}, label), desc ? h("small", {style: "color:var(--muted)"}, desc) : null), h("label", {class: "tog"}, h("input", {type: "checkbox", checked, onchange: e => on(e.target.checked)}), h("i")));}
+const save = (o, msg) => api("settings", o).then(() => { toast(msg || "اتحفظ ✅"); refresh(true); }).catch(e => toast(e.message, true));
+function settingsPage(){
+  const s = S.settings, st = S.steam, q = s.quiet;
+  const url = h("input", {type: "text", dir: "ltr", placeholder: "https://steamcommunity.com/id/yourname", style: "min-width:280px;flex:1"});
+  const key = h("input", {type: "password", dir: "ltr", placeholder: "Steam API Key (optional)", style: "min-width:200px"});
+  const dc = h("input", {type: "password", dir: "ltr", placeholder: s.has_discord ? "•••••• (saved)" : "https://discord.com/api/webhooks/…", style: "min-width:300px;flex:1"});
+  const tgt = h("input", {type: "password", dir: "ltr", placeholder: s.has_telegram ? "•••••• (saved)" : "Bot Token", style: "min-width:220px"});
+  const tgc = h("input", {type: "text", dir: "ltr", placeholder: "Chat ID", value: s.telegram_chat, style: "width:150px"});
+  const qa = h("input", {type: "time", value: q.from}), qb = h("input", {type: "time", value: q.to});
+  const test = ch => async ev => { const b = ev.currentTarget; b.disabled = true; try { const r = await api("notify/test", {channel: ch}); toast(r.message, !r.ok); } catch (e){ toast(e.message, true); } b.disabled = false; };
+  const diag = h("div");
+  return h("div", {},
+    h("div", {class: "panel"}, h("h3", {}, "🔗 ربط الحسابات"), h("p", {class: "sub"}, "الباسورد بتكتبه في صفحة Steam الرسمية بس، والبرنامج مبيشوفوش أبداً."),
+      st.linked ? h("div", {}, h("div", {class: "row2"}, h("span", {class: "badge free"}, "✓ متربط"), h("b", {}, st.name || st.id), h("span", {style: "color:var(--muted)"}, `${st.owned} لعبة في مكتبتك · آخر مزامنة ${ago(st.last_sync)}`)),
+        h("div", {class: "row2"}, h("button", {class: "btn pri sm", disabled: st.syncing, onclick: () => api("steam/sync", {}).then(() => { toast("بيزامن في الخلفية…"); refresh(true); }).catch(e => toast(e.message, true))}, st.syncing ? "⏳ بيزامن…" : "🔄 زامن دلوقتي"),
+          h("button", {class: "btn sm danger", onclick: () => api("steam/unlink", {}).then(() => refresh(true))}, "فك الربط"),
+          h("span", {style: "color:var(--muted);font-size:13px"}, "بيزامن لوحده كل 24 ساعة"))) :
+      h("div", {}, h("div", {class: "row2"}, h("button", {class: "btn pri", onclick: () => api("steam/login", {}).then(() => toast("افتحنالك Steam في المتصفح، سجّل دخول وارجع هنا ✅")).catch(e => toast(e.message, true))}, "🎮 سجّل دخول بـ Steam"),
+        h("span", {style: "color:var(--muted)"}, "أو بالرابط:")),
+        h("div", {class: "row2"}, url, key, h("button", {class: "btn sm", onclick: () => api("steam/manual", {text: url.value, key: key.value}).then(r => { toast("اتربط: " + r.name); refresh(true); }).catch(e => toast(e.message, true))}, "ربط"))),
+      st.linked ? h("div", {class: "row2"}, key, h("button", {class: "btn sm", onclick: () => save({steam_key: key.value}, "اتحفظ المفتاح")}, "حفظ API Key"), h("small", {style: "color:var(--muted)"}, "اختياري: بيدّي مكتبة أدق (بدونه بنقراها من البروفايل لو Public).")) : null,
+      h("p", {class: "sub", style: "margin:10px 0 0"}, "ℹ️ Epic و GOG مفيهمش ربط حساب رسمي آمن (الحلول غير الرسمية بتطلب باسوردك وممكن تعرّض الحساب للحظر)، فمش مدعومين. استخدم الأمنيات وزرار \"خدتها\".")),
+    h("div", {class: "panel"}, h("h3", {}, "🔔 الإشعارات"), h("p", {class: "sub"}, "اختار إيه اللي يبلّغك وعلى فين."),
+      tog("إشعارات ويندوز", null, s.notify, v => save({notify: v})), tog("🎁 ألعاب مجانية جديدة", null, s.notify_free, v => save({notify_free: v})),
+      tog("🔥 خصومات خرافية", null, s.notify_deals, v => save({notify_deals: v})), tog("⭐ ألعاب قايمتك", null, s.notify_wishlist, v => save({notify_wishlist: v})),
+      h("div", {class: "row2"}, h("label", {class: "field"}, h("small", {}, "حد الخصم الخرافي"), h("select", {onchange: e => save({min_discount_alert: Number(e.target.value)})}, [70, 80, 85, 90, 95].map(n => h("option", {value: n, selected: s.min_discount_alert === n}, n + "%")))),
+        h("button", {class: "btn sm", onclick: test("toast")}, "🔔 جرّب إشعار ويندوز")),
+      h("div", {class: "row2"}, dc, h("button", {class: "btn sm", onclick: () => save({discord: dc.value}, "اتحفظ")}, "حفظ"), h("button", {class: "btn sm", onclick: test("discord")}, "جرّب Discord"),
+        s.has_discord ? h("button", {class: "btn sm danger", onclick: () => save({discord: ""}, "اتمسح")}, "مسح") : null),
+      h("div", {class: "row2"}, tgt, tgc, h("button", {class: "btn sm", onclick: () => save({telegram: {token: tgt.value || null, chat: tgc.value}}, "اتحفظ")}, "حفظ"), h("button", {class: "btn sm", onclick: test("telegram")}, "جرّب Telegram")),
+      tog("🌙 ساعات الهدوء", "الإشعارات بتتأجّل وتوصلك بعد المعاد (مش بتضيع)", q.on, v => save({quiet: {on: v, from: qa.value, to: qb.value}})),
+      h("div", {class: "row2"}, "من", qa, "إلى", qb, h("button", {class: "btn sm", onclick: () => save({quiet: {on: q.on, from: qa.value, to: qb.value}})}, "حفظ"), S.held ? h("span", {class: "badge own"}, S.held + " إشعار مؤجّل") : null)),
+    h("div", {class: "panel"}, h("h3", {}, "⚡ الفحص التلقائي"), h("p", {class: "sub"}, "كل مصدر ليه ميعاده وبيستعمل كاش، فالاستهلاك قليل جداً. لما تقفل النافذة مبيفضلش غير برنامج صغير في الخلفية."),
+      h("div", {class: "row2"}, h("div", {class: "seg"}, [["eco", "🍃 توفير"], ["normal", "⚖️ متوازن"], ["fast", "🚀 سريع"]].map(([k, t]) => h("button", {class: s.mode === k ? "on" : "", onclick: () => save({mode: k})}, t))),
+        h("small", {style: "color:var(--muted)"}, "توفير = نص التكرار · سريع = ضعف التكرار")),
+      Object.entries(S.sources).map(([k, v]) => h("div", {class: "sw"}, h("div", {}, h("div", {}, v.label), h("small", {style: v.ok === false ? "color:var(--red)" : "color:var(--muted)"},
+        !v.enabled ? "مقفول" : v.ok === false ? "مش بيرد: " + v.err : v.ok ? `آخر فحص ${ago(v.last)} · الجاي ${inn(v.next)}` : "لسه")),
+        k === "wishlist" ? null : h("label", {class: "tog"}, h("input", {type: "checkbox", checked: v.enabled, onchange: e => save({sources: {[k]: e.target.checked}})}), h("i")))),
+      tog("عروض Steam الرسمية (بتدّي وقت انتهاء الخصم)", null, s.sources.steam_specials, v => save({sources: {steam_specials: v}}))),
+    h("div", {class: "panel"}, h("h3", {}, "🧰 النظام"),
+      S.windows ? tog("تشغيل مع الويندوز", "بيشتغل مصغّر في الخلفية", S.autostart, v => api("autostart", {on: v}).then(() => refresh(true))) : null,
+      h("div", {class: "row2"}, h("button", {class: "btn sm", onclick: async e => { e.currentTarget.disabled = true; diag.replaceChildren(h("span", {}, "⏳ بيفحص…")); try { const r = await api("diagnose"); diag.replaceChildren(h("div", {class: "health"}, r.rows.map(x => h("div", {class: "hp"}, h("i", {class: "dot " + (x.ok ? "ok" : "bad")}), h("b", {}, x.name), x.detail)))); } catch (er){ diag.replaceChildren(h("span", {class: "err"}, er.message)); } e.currentTarget.disabled = false; }}, "🩺 فحص الاتصال"),
+        h("button", {class: "btn sm", onclick: async () => modal(h("h3", {}, "📄 ملف السجل"), h("pre", {class: "log"}, (await api("log")).text))}, "📄 ملف السجل"),
+        h("button", {class: "btn sm danger", onclick: () => modal(h("h3", {}, "تقفل البرنامج تماماً؟"), h("p", {}, "هيبطّل يفحص وإشعاراتك هتقف لحد ما تفتحه تاني."), h("button", {class: "btn danger", onclick: () => api("quit", {})}, "آه اقفله"))}, "⏻ إغلاق تماماً")), diag,
+      h("p", {class: "sub", style: "margin-top:12px"}, "💬 ", h("a", {href: "#", onclick: e => { e.preventDefault(); openUrl("https://discord.gg/G2mC7qGNpk"); }}, "سيرفر الديسكورد"), " · بياناتك كلها على جهازك في ~/.dealhunter")));
+}
+/* ============ تشغيل ============ */
+function tick(){ document.querySelectorAll("[data-end]").forEach(e => { e.textContent = left(Number(e.dataset.end)); }); }
+$("#checkBtn").onclick = async e => {
+  const b = e.currentTarget; b.disabled = true; b.textContent = "⏳ بيفحص…";
+  try { await api("check", {}); toast("بدأ الفحص…"); setTimeout(() => refresh(true), 4000); setTimeout(() => refresh(true), 12000); } catch (er){ toast(er.message, true); }
+  setTimeout(() => { b.disabled = false; b.textContent = "🔄 افحص دلوقتي"; }, 5000);
+};
+$("#q").oninput = e => { Q = e.target.value.trim().toLowerCase(); if (S && !["stats", "set"].includes(page)) render(); };
+document.addEventListener("keydown", e => { if (e.key === "/" && !/INPUT|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); } });
+document.addEventListener("focusout", () => setTimeout(() => { if (dirty && !typing() && S) render(); }, 150));
+setInterval(() => { if (document.visibilityState === "visible") { refresh(); tick(); } }, 4000);
+setInterval(() => { if (document.visibilityState === "visible" && page === "home" && S && S.free.filter(g => !g.owned).length > 1 && !typing()){ F.hero++; render(); } }, 9000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") refresh(true); });
+buildNavInit();
+function buildNavInit(){ $("#nav").replaceChildren(...PAGES.map(([k, i, l]) => h("button", {class: page === k ? "on" : "", onclick: () => go(k)}, h("span", {class: "ico"}, i), h("span", {class: "l"}, l)))); $("#title").textContent = TITLES[page]; $("#view").replaceChildren(skeleton()); }
+refresh(true);
+</script>
+</body>
+</html>
